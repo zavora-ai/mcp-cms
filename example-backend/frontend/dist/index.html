@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Dashboard — mcp-cms Example Backend</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0f172a; color: #e2e8f0; }
+        .app { max-width: 1200px; margin: 0 auto; padding: 24px; }
+        h1 { font-size: 24px; margin-bottom: 8px; color: #f1f5f9; }
+        .subtitle { color: #64748b; margin-bottom: 32px; font-size: 14px; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid #1e293b; padding-bottom: 8px; }
+        .tab { padding: 8px 16px; border-radius: 6px 6px 0 0; cursor: pointer; font-size: 13px; color: #94a3b8; transition: all 0.2s; }
+        .tab:hover { color: #e2e8f0; background: #1e293b; }
+        .tab.active { color: #38bdf8; background: #1e293b; border-bottom: 2px solid #38bdf8; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; transition: border-color 0.2s; }
+        .card:hover { border-color: #475569; }
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #f1f5f9; }
+        .card-meta { font-size: 12px; color: #64748b; margin-bottom: 12px; }
+        .card-body { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 500; margin-right: 4px; }
+        .badge-published { background: #064e3b; color: #34d399; }
+        .badge-draft { background: #1e1b4b; color: #a78bfa; }
+        .badge-review { background: #451a03; color: #fbbf24; }
+        .badge-scheduled { background: #0c4a6e; color: #38bdf8; }
+        .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 10px; background: #334155; color: #94a3b8; margin: 2px; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat { background: #1e293b; border-radius: 8px; padding: 16px; text-align: center; border: 1px solid #334155; }
+        .stat-value { font-size: 28px; font-weight: 700; color: #f1f5f9; }
+        .stat-label { font-size: 11px; color: #64748b; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .empty { text-align: center; padding: 48px; color: #475569; }
+        .social-icon { font-size: 16px; margin-right: 6px; }
+        .video-stats { display: flex; gap: 16px; margin-top: 8px; }
+        .video-stat { font-size: 12px; color: #64748b; }
+        .video-stat strong { color: #e2e8f0; }
+        @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const API = '/api/v1';
+
+        function App() {
+            const [tab, setTab] = React.useState('content');
+            const [content, setContent] = React.useState([]);
+            const [social, setSocial] = React.useState([]);
+            const [videos, setVideos] = React.useState([]);
+            const [media, setMedia] = React.useState([]);
+            const [categories, setCategories] = React.useState([]);
+            const [calendar, setCalendar] = React.useState([]);
+
+            React.useEffect(() => {
+                fetch(`${API}/content`).then(r => r.json()).then(setContent);
+                fetch(`${API}/social/posts/scheduled`).then(r => r.json()).then(setSocial);
+                fetch(`${API}/videos`).then(r => r.json()).then(setVideos);
+                fetch(`${API}/media`).then(r => r.json()).then(setMedia);
+                fetch(`${API}/categories`).then(r => r.json()).then(setCategories);
+                fetch(`${API}/calendar`).then(r => r.json()).then(setCalendar);
+            }, []);
+
+            const published = content.filter(c => c.status === 'published').length;
+            const drafts = content.filter(c => c.status === 'draft').length;
+
+            return (
+                <div className="app">
+                    <h1>📝 CMS Dashboard</h1>
+                    <p className="subtitle">mcp-cms example backend — Rust + SQLite + React</p>
+
+                    <div className="stats">
+                        <div className="stat"><div className="stat-value">{content.length}</div><div className="stat-label">Content</div></div>
+                        <div className="stat"><div className="stat-value">{social.length}</div><div className="stat-label">Scheduled Posts</div></div>
+                        <div className="stat"><div className="stat-value">{videos.length}</div><div className="stat-label">Videos</div></div>
+                        <div className="stat"><div className="stat-value">{media.length}</div><div className="stat-label">Media Assets</div></div>
+                    </div>
+
+                    <div className="tabs">
+                        {['content','social','videos','media','calendar'].map(t => (
+                            <div key={t} className={`tab ${tab===t?'active':''}`} onClick={() => setTab(t)}>
+                                {t === 'content' ? '📄 Content' : t === 'social' ? '📱 Social' : t === 'videos' ? '🎬 Videos' : t === 'media' ? '🖼️ Media' : '📅 Calendar'}
+                            </div>
+                        ))}
+                    </div>
+
+                    {tab === 'content' && (
+                        <div className="grid">
+                            {content.map(c => (
+                                <div key={c.id} className="card">
+                                    <div className="card-title">{c.title}</div>
+                                    <div className="card-meta">
+                                        <span className={`badge badge-${c.status}`}>{c.status}</span>
+                                        <span className="badge" style={{background:'#1e293b',color:'#64748b'}}>{c.content_type}</span>
+                                        {c.author && <span style={{color:'#64748b',fontSize:11}}> by {c.author}</span>}
+                                    </div>
+                                    <div className="card-body">{c.body?.substring(0, 120)}...</div>
+                                    <div style={{marginTop:8}}>
+                                        {(c.tags || []).map(t => <span key={t} className="tag">{t}</span>)}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {tab === 'social' && (
+                        <div className="grid">
+                            {social.map(p => (
+                                <div key={p.id} className="card">
+                                    <div className="card-title">
+                                        {(p.platforms || []).map(pl => <span key={pl} className="social-icon">{pl==='twitter'?'𝕏':pl==='linkedin'?'in':'📷'}</span>)}
+                                    </div>
+                                    <div className="card-meta"><span className="badge badge-scheduled">scheduled</span> {p.scheduled_at}</div>
+                                    <div className="card-body">{p.content}</div>
+                                </div>
+                            ))}
+                            {social.length === 0 && <div className="empty">No scheduled posts</div>}
+                        </div>
+                    )}
+
+                    {tab === 'videos' && (
+                        <div className="grid">
+                            {videos.map(v => (
+                                <div key={v.id} className="card">
+                                    <div className="card-title">🎬 {v.title}</div>
+                                    <div className="card-meta"><span className={`badge badge-${v.status}`}>{v.status}</span> {v.privacy}</div>
+                                    <div className="card-body">{v.description}</div>
+                                    <div className="video-stats">
+                                        <div className="video-stat"><strong>{v.views?.toLocaleString()}</strong> views</div>
+                                        <div className="video-stat"><strong>{v.watch_time_hours}</strong> hrs watched</div>
+                                    </div>
+                                    <div style={{marginTop:8}}>{(v.tags||[]).map(t => <span key={t} className="tag">{t}</span>)}</div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {tab === 'media' && (
+                        <div className="grid">
+                            {media.map(m => (
+                                <div key={m.id} className="card">
+                                    <div className="card-title">🖼️ {m.filename || m.id}</div>
+                                    <div className="card-meta">{m.media_type} · {m.created_at?.split('T')[0]}</div>
+                                    <div className="card-body" style={{wordBreak:'break-all',fontSize:11}}>{m.url}</div>
+                                    {m.alt_text && <div style={{marginTop:4,fontSize:11,color:'#64748b'}}>Alt: {m.alt_text}</div>}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {tab === 'calendar' && (
+                        <div className="grid">
+                            {calendar.map((item, i) => (
+                                <div key={i} className="card">
+                                    <div className="card-title">{item.title || item.content?.substring(0,40)}</div>
+                                    <div className="card-meta">
+                                        <span className="badge badge-scheduled">{item.channel}</span>
+                                        {item.scheduled_at}
+                                    </div>
+                                </div>
+                            ))}
+                            {calendar.length === 0 && <div className="empty">Nothing scheduled</div>}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+</body>
+</html>
