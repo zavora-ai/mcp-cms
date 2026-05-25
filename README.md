@@ -45,6 +45,15 @@ CMS_API_URL="http://localhost:7799/api/v1" mcp-cms
 
 The example backend implements the [Custom API Spec](#custom-api-spec) below. Fork it as a starting point, or build your own in any language (Express, FastAPI, Go, Rails) — as long as it implements the same endpoints, mcp-cms will work with it.
 
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [API Reference](docs/api-reference.md) | All 26 tools with parameters, examples, and return values |
+| [Backends Guide](docs/backends.md) | Setup for WordPress, Contentful, YouTube, Twitter, LinkedIn, Meta, Custom API |
+| [Custom API Spec](docs/api-spec.md) | REST endpoint spec for building your own backend |
+| [Example Backend](example-backend/README.md) | Reference implementation (Rust + SQLite + React) |
+
 ## Tools (26)
 
 ### Content Management (6)
