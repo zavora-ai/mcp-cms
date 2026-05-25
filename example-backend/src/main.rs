@@ -104,9 +104,9 @@ async fn seed_db(db: &Db) {
         INSERT INTO videos VALUES ('vid-1','MCP Server Architecture Deep Dive','A 20-minute walkthrough of how MCP servers work, including tool routing, transport layers, and multi-backend patterns.','[\"mcp\",\"architecture\",\"tutorial\"]','public','published',12400,890.5);
         INSERT INTO videos VALUES ('vid-2','Product Demo: AI Agent Workflows','See how AI agents orchestrate multi-step workflows with approvals, notifications, and error handling.','[\"demo\",\"workflows\",\"ai\"]','public','published',5200,320.0);
 
-        INSERT INTO media VALUES ('img-1','https://cdn.zavora.ai/blog/ai-agents-hero.png','AI Agents architecture diagram','ai-agents-hero.png','image','2026-05-20T10:00:00Z');
-        INSERT INTO media VALUES ('img-2','https://cdn.zavora.ai/blog/dark-mode-preview.png','Dark mode preview screenshot','dark-mode-preview.png','image','2026-05-24T14:00:00Z');
-        INSERT INTO media VALUES ('vid-thumb-1','https://cdn.zavora.ai/video/mcp-thumb.jpg','MCP Deep Dive thumbnail','mcp-thumb.jpg','image','2026-05-15T08:00:00Z');
+        INSERT INTO media VALUES ('img-1','https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600','AI Agents architecture diagram','ai-agents-hero.png','image','2026-05-20T10:00:00Z');
+        INSERT INTO media VALUES ('img-2','https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600','Dark mode preview screenshot','dark-mode-preview.png','image','2026-05-24T14:00:00Z');
+        INSERT INTO media VALUES ('vid-thumb-1','https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600','MCP Deep Dive thumbnail','mcp-thumb.jpg','image','2026-05-15T08:00:00Z');
 
         INSERT INTO categories VALUES ('cat-1','Engineering',NULL);
         INSERT INTO categories VALUES ('cat-2','Product',NULL);

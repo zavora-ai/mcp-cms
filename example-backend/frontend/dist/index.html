@@ -18,8 +18,8 @@
         .tab:hover { color: #e2e8f0; background: #1e293b; }
         .tab.active { color: #38bdf8; background: #1e293b; border-bottom: 2px solid #38bdf8; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
-        .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; transition: border-color 0.2s; }
-        .card:hover { border-color: #475569; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; transition: border-color 0.2s; cursor: pointer; }
+        .card:hover { border-color: #38bdf8; }
         .card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #f1f5f9; }
         .card-meta { font-size: 12px; color: #64748b; margin-bottom: 12px; }
         .card-body { font-size: 13px; color: #94a3b8; line-height: 1.5; }
@@ -39,6 +39,16 @@
         .video-stat { font-size: 12px; color: #64748b; }
         .video-stat strong { color: #e2e8f0; }
         @media (max-width: 768px) { .stats { grid-template-columns: repeat(2, 1fr); } .grid { grid-template-columns: 1fr; } }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
+        .modal { background: #1e293b; border-radius: 16px; padding: 32px; max-width: 720px; width: 90%; max-height: 85vh; overflow-y: auto; border: 1px solid #334155; position: relative; }
+        .modal-close { position: absolute; top: 16px; right: 16px; background: #334155; border: none; color: #94a3b8; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        .modal-close:hover { background: #475569; color: #f1f5f9; }
+        .modal h2 { font-size: 22px; color: #f1f5f9; margin-bottom: 12px; padding-right: 40px; }
+        .modal-meta { display: flex; gap: 8px; margin-bottom: 20px; align-items: center; }
+        .modal-body { font-size: 15px; line-height: 1.8; color: #cbd5e1; white-space: pre-wrap; }
+        .modal-body h2 { font-size: 18px; margin-top: 20px; margin-bottom: 8px; }
+        .modal-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid #334155; }
+        .modal-section-title { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -54,6 +64,7 @@
             const [media, setMedia] = React.useState([]);
             const [categories, setCategories] = React.useState([]);
             const [calendar, setCalendar] = React.useState([]);
+            const [selected, setSelected] = React.useState(null);
 
             React.useEffect(() => {
                 fetch(`${API}/content`).then(r => r.json()).then(setContent);
@@ -90,7 +101,7 @@
                     {tab === 'content' && (
                         <div className="grid">
                             {content.map(c => (
-                                <div key={c.id} className="card">
+                                <div key={c.id} className="card" onClick={() => setSelected(c)}>
                                     <div className="card-title">{c.title}</div>
                                     <div className="card-meta">
                                         <span className={`badge badge-${c.status}`}>{c.status}</span>
@@ -103,6 +114,59 @@
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                    )}
+
+                    {selected && (
+                        <div className="modal-overlay" onClick={() => setSelected(null)}>
+                            <div className="modal" onClick={e => e.stopPropagation()}>
+                                <button className="modal-close" onClick={() => setSelected(null)}>✕</button>
+
+                                {selected._type === 'video' ? (
+                                    <>
+                                        <h2>🎬 {selected.title}</h2>
+                                        <div className="modal-meta">
+                                            <span className={`badge badge-${selected.status}`}>{selected.status}</span>
+                                            <span style={{color:'#64748b',fontSize:12}}>{selected.privacy}</span>
+                                        </div>
+                                        <div style={{background:'#000',borderRadius:12,overflow:'hidden',marginBottom:16,position:'relative',paddingTop:'56.25%'}}>
+                                            <div style={{position:'absolute',top:0,left:0,right:0,bottom:0,display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column'}}>
+                                                <div style={{width:80,height:80,borderRadius:'50%',background:'rgba(255,255,255,0.1)',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',border:'2px solid rgba(255,255,255,0.3)'}}>
+                                                    <span style={{fontSize:36,marginLeft:4}}>▶</span>
+                                                </div>
+                                                <div style={{marginTop:12,color:'#94a3b8',fontSize:12}}>Video player — connect YouTube backend for real playback</div>
+                                            </div>
+                                        </div>
+                                        <div className="card-body">{selected.description}</div>
+                                        <div className="video-stats" style={{marginTop:16}}>
+                                            <div className="video-stat"><strong>{selected.views?.toLocaleString()}</strong> views</div>
+                                            <div className="video-stat"><strong>{selected.watch_time_hours}</strong> hrs watched</div>
+                                        </div>
+                                        <div style={{marginTop:12}}>{(selected.tags||[]).map(t => <span key={t} className="tag">{t}</span>)}</div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <h2>{selected.title}</h2>
+                                        <div className="modal-meta">
+                                            <span className={`badge badge-${selected.status}`}>{selected.status}</span>
+                                            <span className="badge" style={{background:'#1e293b',color:'#64748b'}}>{selected.content_type}</span>
+                                            {selected.author && <span style={{color:'#64748b',fontSize:12}}>by {selected.author}</span>}
+                                            <span style={{color:'#475569',fontSize:11,marginLeft:'auto'}}>{selected.created_at?.split('T')[0]}</span>
+                                        </div>
+                                        <div className="modal-body">{selected.body}</div>
+                                        <div style={{marginTop:12}}>
+                                            {(selected.tags || []).map(t => <span key={t} className="tag">{t}</span>)}
+                                        </div>
+                                        {selected.seo_title && (
+                                            <div className="modal-section">
+                                                <div className="modal-section-title">SEO</div>
+                                                <div style={{fontSize:13,color:'#94a3b8'}}>{selected.seo_title}</div>
+                                                <div style={{fontSize:12,color:'#64748b'}}>{selected.seo_description}</div>
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
                         </div>
                     )}
 
@@ -124,7 +188,7 @@
                     {tab === 'videos' && (
                         <div className="grid">
                             {videos.map(v => (
-                                <div key={v.id} className="card">
+                                <div key={v.id} className="card" onClick={() => setSelected({...v, _type:'video'})}>
                                     <div className="card-title">🎬 {v.title}</div>
                                     <div className="card-meta"><span className={`badge badge-${v.status}`}>{v.status}</span> {v.privacy}</div>
                                     <div className="card-body">{v.description}</div>
@@ -142,10 +206,13 @@
                         <div className="grid">
                             {media.map(m => (
                                 <div key={m.id} className="card">
-                                    <div className="card-title">🖼️ {m.filename || m.id}</div>
+                                    <div style={{background:'#0f172a',borderRadius:8,overflow:'hidden',marginBottom:12,height:160,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                                        <img src={m.url} alt={m.alt_text || ''} style={{maxWidth:'100%',maxHeight:'100%',objectFit:'cover',borderRadius:8}} onError={(e) => { e.target.style.display='none'; e.target.parentNode.innerHTML='<div style="color:#475569;font-size:48px">🖼️</div><div style="color:#475569;font-size:11px;margin-top:8px">Preview unavailable</div>'; }} />
+                                    </div>
+                                    <div className="card-title">{m.filename || m.id}</div>
                                     <div className="card-meta">{m.media_type} · {m.created_at?.split('T')[0]}</div>
-                                    <div className="card-body" style={{wordBreak:'break-all',fontSize:11}}>{m.url}</div>
-                                    {m.alt_text && <div style={{marginTop:4,fontSize:11,color:'#64748b'}}>Alt: {m.alt_text}</div>}
+                                    {m.alt_text && <div style={{fontSize:11,color:'#64748b',marginTop:4}}>Alt: {m.alt_text}</div>}
+                                    <div style={{fontSize:10,color:'#475569',marginTop:4,wordBreak:'break-all'}}>{m.url}</div>
                                 </div>
                             ))}
                         </div>

@@ -13,6 +13,38 @@ Unified content platform for AI agents — manage articles, social media, YouTub
   <img src="https://raw.githubusercontent.com/zavora-ai/mcp-cms/main/docs/assets/architecture.svg" alt="MCP CMS Architecture" width="850"/>
 </p>
 
+## Example Backend (included)
+
+A full reference implementation is included in `example-backend/` — **Rust (Axum) + SQLite + React** dashboard.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/zavora-ai/mcp-cms/main/docs/assets/dashboard-screenshot.png" alt="CMS Dashboard" width="800" style="border-radius: 12px;"/>
+</p>
+
+### Quick Start
+
+```bash
+# Terminal 1: Start the backend
+cd example-backend
+cargo run
+# → Dashboard: http://localhost:7799
+# → API: http://localhost:7799/api/v1
+
+# Terminal 2: Connect mcp-cms
+CMS_API_URL="http://localhost:7799/api/v1" mcp-cms
+```
+
+### What's Included
+
+- **Axum web server** — all 26 API endpoints implemented
+- **SQLite database** — auto-created with schema + seeded demo data
+- **React dashboard** — dark theme, content/social/video/media tabs, click-to-open detail views, video player, image previews
+- **Zero config** — just `cargo run`, no env vars needed
+
+### Building Your Own Backend
+
+The example backend implements the [Custom API Spec](#custom-api-spec) below. Fork it as a starting point, or build your own in any language (Express, FastAPI, Go, Rails) — as long as it implements the same endpoints, mcp-cms will work with it.
+
 ## Tools (26)
 
 ### Content Management (6)
