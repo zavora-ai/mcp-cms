@@ -52,6 +52,7 @@ The example backend implements the [Custom API Spec](#custom-api-spec) below. Fo
 | [API Reference](docs/api-reference.md) | All 26 tools with parameters, examples, and return values |
 | [Backends Guide](docs/backends.md) | Setup for WordPress, Contentful, YouTube, Twitter, LinkedIn, Meta, Custom API |
 | [Custom API Spec](docs/api-spec.md) | REST endpoint spec for building your own backend |
+| [Competitive Comparison](docs/comparison.md) | How mcp-cms compares to Ghost, Sanity, WordPress, YouTube MCPs |
 | [Example Backend](example-backend/README.md) | Reference implementation (Rust + SQLite + React) |
 
 ## Tools (26)
