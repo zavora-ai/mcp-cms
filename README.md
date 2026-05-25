@@ -18,7 +18,7 @@ Unified content platform for AI agents — manage articles, social media, YouTub
 A full reference implementation is included in `example-backend/` — **Rust (Axum) + SQLite + React** dashboard.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/zavora-ai/mcp-cms/main/docs/assets/dashboard-screenshot.png" alt="CMS Dashboard" width="800" style="border-radius: 12px;"/>
+  <img src="https://raw.githubusercontent.com/zavora-ai/mcp-cms/main/docs/assets/dashboard-screenshot.jpg" alt="CMS Dashboard" width="800" style="border-radius: 12px;"/>
 </p>
 
 ### Quick Start
