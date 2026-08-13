@@ -40,7 +40,7 @@ fn r(result: Result<serde_json::Value, anyhow::Error>) -> String {
     match result { Ok(v) => serde_json::to_string_pretty(&v).unwrap(), Err(e) => format!("Error: {}", e) }
 }
 
-#[tool_router(server_handler)]
+#[tool_router]
 impl CmsServer {
     // === Content (6) ===
     #[tool(description = "List content (articles, pages, posts) filtered by status, type, or channel")]
@@ -240,4 +240,11 @@ impl CmsServer {
     async fn get_publish_status(&self, Parameters(input): Parameters<IdInput>) -> String {
         r(self.backend.content.get(&format!("/content/{}/status", input.id)).await)
     }
+}
+
+adk_mcp_sdk::mcp_2026_server! {
+    server: CmsServer,
+    task_tools: ["upload_video", "upload_media"],
+    approval_tools: ["publish_content", "unpublish_content", "schedule_social_post", "delete_scheduled_post", "get_publish_status"],
+    cache_ttl_ms: 60_000,
 }
