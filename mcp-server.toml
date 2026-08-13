@@ -1,0 +1,193 @@
+server_id = "mcp_cms"
+display_name = "Cms"
+version = "1.1.0"
+domain = "cms"
+sdk_version = "0.2.0"
+risk_level = "high"
+writes_allowed = "gated"
+transports = ["stdio"]
+credentials = []
+governance_gates = ["mrtr_approval"]
+environments = ["development", "staging", "production"]
+
+[[tools]]
+name = "list_content"
+description = "List content (articles, pages, posts) filtered by status, type, or channel"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_content"
+description = "Get full content with metadata, SEO, and media"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "create_content"
+description = "Create content (article, page, post) in draft state"
+risk_class = "generated_write_draft"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "update_content"
+description = "Update content body, title, or metadata"
+risk_class = "internal_write"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "publish_content"
+description = "Publish content — makes it live on website/blog"
+risk_class = "external_write"
+requires_approval = true
+credential_bindings = []
+
+[[tools]]
+name = "unpublish_content"
+description = "Unpublish content — takes it offline"
+risk_class = "external_write"
+requires_approval = true
+credential_bindings = []
+
+[[tools]]
+name = "list_social_accounts"
+description = "List connected social media accounts (Twitter, LinkedIn, Instagram, Facebook)"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "schedule_social_post"
+description = "Schedule a post to one or more social platforms"
+risk_class = "external_write"
+requires_approval = true
+credential_bindings = []
+
+[[tools]]
+name = "get_social_metrics"
+description = "Get social media engagement metrics (likes, shares, comments, reach)"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "list_scheduled_posts"
+description = "List upcoming scheduled social posts"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "delete_scheduled_post"
+description = "Cancel a scheduled social post"
+risk_class = "internal_write"
+requires_approval = true
+credential_bindings = []
+
+[[tools]]
+name = "list_videos"
+description = "List videos (YouTube, Vimeo, or custom platform)"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_video"
+description = "Get video details, stats, and transcript"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "upload_video"
+description = "Upload video with title, description, and tags"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "update_video"
+description = "Update video title, description, tags, or thumbnail"
+risk_class = "internal_write"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_video_analytics"
+description = "Get video analytics: views, watch time, retention, CTR"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "list_media"
+description = "List media assets (images, videos, files)"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "upload_media"
+description = "Upload a media asset to the library"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_media"
+description = "Get media asset details and URL"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "list_categories"
+description = "List categories and tags"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "create_category"
+description = "Create a category or tag"
+risk_class = "internal_write"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_seo_metadata"
+description = "Get SEO metadata for content (title, description, OG tags)"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "update_seo"
+description = "Update SEO metadata (title, description, keywords)"
+risk_class = "internal_write"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_content_calendar"
+description = "View content calendar — all scheduled content across channels"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "request_review"
+description = "Submit content for editorial review"
+risk_class = "read_only"
+requires_approval = false
+credential_bindings = []
+
+[[tools]]
+name = "get_publish_status"
+description = "Get content workflow state (draft, review, scheduled, published)"
+risk_class = "external_write"
+requires_approval = true
+credential_bindings = []
